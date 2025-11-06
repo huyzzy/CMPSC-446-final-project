@@ -3,9 +3,9 @@
 ## Authors
 Huy Nguyen, Alicia Peters, Neville Pochara 
 ## Roles
-Huy- Explainability & Fact Checking
-Alicia- Data & Preprocessing
-Neville- Modeling & Classification 
+- Huy- Explainability & Fact Checking
+- Alicia- Data & Preprocessing
+- Neville- Modeling & Classification 
 ## Features
 - Uses transformer-based NLP models for classification
 - Highlights persuasive linguistic patterns (e.g., fear words, exaggerations)

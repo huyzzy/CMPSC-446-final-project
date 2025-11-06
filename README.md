@@ -25,3 +25,10 @@ Huy Nguyen, Alicia Peters, Neville Pochara
 ## Technologies
 - Python, spaCy
 - Fact-checking API integration 
+## Contributions
+- Huy
+  -
+- Alicia
+  -
+- Neville
+  -

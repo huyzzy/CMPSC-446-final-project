@@ -24,7 +24,8 @@ Huy Nguyen, Alicia Peters, Neville Pochara
 6. Evaluate accuracy and interpretability
 ## Technologies
 - Python, spaCy
-- Fact-checking API integration 
+- Fact-checking API integration
+- SHAP/LIME for explainability
 ## Contributions
 - Huy
   -

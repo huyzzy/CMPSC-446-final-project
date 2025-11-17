@@ -1,6 +1,38 @@
 from datasets import Dataset, ClassLabel
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer
 from data_preprocess import load_dataset
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support, confusion_matrix
+import numpy as np
+import json
+
+def compute_metrics(eval_pred):
+    logits, labels = eval_pred
+    preds = np.argmax(logits, axis=1)
+
+    acc = accuracy_score(labels, preds)
+    precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average="binary")
+    cm = confusion_matrix(labels, preds).tolist()
+
+    # Save metrics to file
+    results = 
+    {
+        "accuracy": acc,
+        "precision": precision,
+        "recall": recall,
+        "f1": f1,
+        "confusion_matrix": cm
+    }
+
+    with open("misinfo_model/eval_results.json", "w") as f:
+        json.dump(results, f, indent=4)
+
+    return 
+    {
+        "accuracy": acc,
+        "precision": precision,
+        "recall": recall,
+        "f1": f1
+    }
 
 def train():
     df = load_dataset()
@@ -25,7 +57,6 @@ def train():
     args = TrainingArguments(
         output_dir="misinfo_model",
         eval_strategy="epoch",
-
         learning_rate=2e-5,
         per_device_train_batch_size=8,
         num_train_epochs=3,

@@ -39,5 +39,6 @@ def analyze(text):
 
     doc = nlp(text)
     cues = [(span.text, span.label_) for span in doc._.persuasive_spans]
+    sentiment = doc._.sentiment
 
-    return label, conf, cues
+    return label, conf, cues, sentiment

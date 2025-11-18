@@ -28,8 +28,8 @@ Huy Nguyen, Alicia Peters, Neville Pochara
 - SHAP/LIME for explainability
 ## Contributions
 - Huy
-  -first prototype: the folder layout, training pipeline, inference script, preprocessing file, spaCy loader, and sample article collection.
+  - first prototype: the folder layout, training pipeline, inference script, preprocessing file, spaCy loader, and sample article collection.
 - Alicia
-  -full evaluation pipeline (accuracy, precision, recall, F1, confusion matrix) and improved the training setup. Built the confidence bar, enhanced article analysis, and added persuasive-cue highlighting.
+  - full evaluation pipeline (accuracy, precision, recall, F1, confusion matrix) and improved the training setup. Built the confidence bar, enhanced article analysis, and added persuasive-cue highlighting.
 - Neville
-  -added sentiment-analysis support to the system by updating the spaCy model, integrating VADER, modifying inference to return sentiment scores, updating the CLI app to display them, and adding a requirements file to streamline setup.
+  - added sentiment-analysis support to the system by updating the spaCy model, integrating VADER, modifying inference to return sentiment scores, updating the CLI app to display them, and adding a requirements file to streamline setup.

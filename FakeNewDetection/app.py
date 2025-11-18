@@ -18,7 +18,7 @@ while True:
         print("Exiting...")
         break
 
-    label, conf, cues = analyze(article)
+    label, conf, cues, sentiment = analyze(article)
 
     # Confidence Bar
 from inference import confidence_bar, highlight_cues
@@ -45,5 +45,11 @@ else:
             print(f" - {word} → {tag}")
     else:
         print("\nNo significant persuasion cues detected.")
+
+    print(f"\nSentiment Analysis:")
+    print(f" - Positive: {sentiment['pos']:.2f}")
+    print(f" - Negative: {sentiment['neg']:.2f}")
+    print(f" - Neutral: {sentiment['neu']:.2f}")
+    print(f" - Compound: {sentiment['compound']:.2f}")
 
     print("\n--- Paste next article or press ENTER to quit ---\n")

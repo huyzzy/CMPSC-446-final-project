@@ -20,6 +20,23 @@ while True:
 
     label, conf, cues = analyze(article)
 
+    # Confidence Bar
+from inference import confidence_bar, highlight_cues
+print("\nPrediction:", label)
+print("Confidence:")
+print(confidence_bar(conf))
+
+# Persuasion Cue Highlighting
+if cues:
+    print("\nPersuasive Language Detected:")
+    for word, tag in cues:
+        print(f" - {word} → {tag}")
+
+    print("\nArticle with Highlights:")
+    print(highlight_cues(article, cues))
+else:
+    print("\nNo significant persuasion cues detected.")
+
     print(f"\nPrediction: {label} ({conf:.2f})")
 
     if cues:

@@ -17,6 +17,18 @@ def confidence_bar(conf):
     percent = int(conf * 100)
     return f"{bar} {percent}%"
 
+def highlight_cues(text, cues):
+    """
+    Highlights persuasive cue words inside the article text.
+    """
+    highlighted = text
+    for word, tag in cues:
+        highlighted = highlighted.replace(
+            word,
+            f"[{word.upper()}]"
+        )
+    return highlighted
+
 def analyze(text):
     enc = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
     logits = model(**enc).logits

@@ -1,0 +1,10 @@
+torch
+transformers
+spacy
+numpy
+datasets
+scikit-learn
+pandas
+vaderSentiment
+#RUN COMMAND BELOW IN TERMINAL
+#python -m spacy download en_core_web_lg

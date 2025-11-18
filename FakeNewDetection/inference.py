@@ -7,6 +7,16 @@ tokenizer = AutoTokenizer.from_pretrained("misinfo_model")
 model = AutoModelForSequenceClassification.from_pretrained("misinfo_model")
 nlp = load_spacy()
 
+def confidence_bar(conf):
+    """
+    Creates a simple progress bar for confidence 0.0–1.0
+    """
+    length = 20  # bar width
+    filled = int(conf * length)
+    bar = "█" * filled + "░" * (length - filled)
+    percent = int(conf * 100)
+    return f"{bar} {percent}%"
+
 def analyze(text):
     enc = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
     logits = model(**enc).logits

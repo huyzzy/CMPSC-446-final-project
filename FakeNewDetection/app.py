@@ -2,7 +2,7 @@ from inference import analyze
 
 print("=== Fake News Detector ===")
 print("Type or paste an article below.")
-print("Press ENTER twice to analyze.\n")
+print("Press ENTER to analyze.\n")
 
 while True:
     lines = []

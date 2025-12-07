@@ -2,10 +2,14 @@ import torch
 import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from spaCyModel import load_spacy
+from nltk.sentiment import SentimentIntensityAnalyzer
+
+from persuasion import extract_persuasive_cues
 
 tokenizer = AutoTokenizer.from_pretrained("misinfo_model")
 model = AutoModelForSequenceClassification.from_pretrained("misinfo_model")
 nlp = load_spacy()
+
 
 def confidence_bar(conf):
     """
@@ -38,7 +42,8 @@ def analyze(text):
     conf = float(probs[0, torch.argmax(probs)].detach())  # detach fixes warning
 
     doc = nlp(text)
-    cues = [(span.text, span.label_) for span in doc._.persuasive_spans]
-    sentiment = doc._.sentiment
+    cues = extract_persuasive_cues(text)
+    sia = SentimentIntensityAnalyzer()
+    sentiment = sia.polarity_scores(text)
 
     return label, conf, cues, sentiment

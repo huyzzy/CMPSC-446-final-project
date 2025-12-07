@@ -4,6 +4,49 @@ from tkinter.scrolledtext import ScrolledText
 
 from inference import analyze
 
+CUE_STYLES = {
+    "ALL_CAPS_EMPHASIS": {"foreground": "#1d4ed8"},   # blue
+    "FEAR_APPEAL": {"foreground": "#b91c1c"},          # red
+    "INTENSIFIER": {"foreground": "#a855f7"},          # purple
+    "APPEAL_TO_AUTHORITY": {"foreground": "#047857"},  # green
+    "EXCESSIVE_EXCLAMATION": {"foreground": "#ea580c"} # orange
+}
+
+CUE_TOOLTIPS = {
+    "ALL_CAPS_EMPHASIS": "Words in ALL CAPS to make the text feel urgent or important.",
+    "FEAR_APPEAL": "Language that tries to scare the reader into reacting.",
+    "INTENSIFIER": "Extra-strong words used to boost emotional impact.",
+    "APPEAL_TO_AUTHORITY": "Refers to experts or authorities to make claims feel credible.",
+    "EXCESSIVE_EXCLAMATION": "Lots of exclamation points to create drama or urgency."
+}
+
+class ToolTip:
+    def __init__(self, widget):
+        self.widget = widget
+        self.tip_window = None
+        self.text = ""
+
+    def show(self, x, y, text):
+        if self.tip_window or not text:
+            return
+        self.text = text
+        self.tip_window = tw = tk.Toplevel(self.widget)
+        tw.wm_overrideredirect(True)
+        tw.wm_geometry(f"+{x}+{y}")
+        label = tk.Label(
+            tw,
+            text=text,
+            justify=tk.LEFT,
+            relief=tk.SOLID,
+            borderwidth=1,
+            background="#ffffe0"
+        )
+        label.pack(ipadx=4, ipady=2)
+
+    def hide(self):
+        if self.tip_window is not None:
+            self.tip_window.destroy()
+            self.tip_window = None
 
 class FakeNewsApp(tk.Tk):
     def __init__(self):
@@ -23,6 +66,9 @@ class FakeNewsApp(tk.Tk):
 
         self._build_left_panel()
         self._build_right_panel()
+        self._cues_tooltip = ToolTip(self.cues_text)
+        self.cues_text.bind("<Motion>", self._on_cues_motion)
+        self.cues_text.bind("<Leave>", lambda e: self._cues_tooltip.hide())
         self._reset_results()
 
     def _build_left_panel(self):
@@ -86,6 +132,11 @@ class FakeNewsApp(tk.Tk):
         self.cues_text = ScrolledText(cues_frame, wrap=tk.WORD, height=8)
         self.cues_text.grid(row=0, column=0, sticky="nsew")
         self.cues_text.config(state=tk.DISABLED)
+
+        # Configure tags for cue types (color-coding)
+        for label, style in CUE_STYLES.items():
+            self.cues_text.tag_config(label, **style)
+
 
         # Sentiment
         sent_frame = ttk.LabelFrame(frame, text="Sentiment")
@@ -174,21 +225,27 @@ class FakeNewsApp(tk.Tk):
             # Cues (list of (span.text, span.label_))
             self.cues_text.config(state=tk.NORMAL)
             self.cues_text.delete("1.0", tk.END)
+
             if not cues:
                 self.cues_text.insert(tk.END, "No significant persuasive cues detected.")
             else:
-                lines = []
                 for cue in cues:
-                    # you return a tuple: (text, label)
                     try:
                         word, tag = cue
                     except Exception:
                         word, tag = str(cue), ""
-                    line = f"- {word}"
-                    if tag:
-                        line += f"  [{tag}]"
-                    lines.append(line)
-                self.cues_text.insert(tk.END, "\n".join(lines))
+
+                    tag_str = str(tag) if tag is not None else ""
+                    line_text = f"- {word}"
+                    if tag_str:
+                        line_text += f"  [{tag_str}]"
+
+                    # Insert line with tag for color-coding
+                    if tag_str in CUE_STYLES:
+                        self.cues_text.insert(tk.END, line_text + "\n", (tag_str,))
+                    else:
+                        self.cues_text.insert(tk.END, line_text + "\n")
+
             self.cues_text.config(state=tk.DISABLED)
 
             # Sentiment (VADER dict: pos, neg, neu, compound)
@@ -211,6 +268,20 @@ class FakeNewsApp(tk.Tk):
         finally:
             self.analyze_btn.config(state=tk.NORMAL, text="Analyze")
 
+    def _on_cues_motion(self, event):
+        """Show tooltip when hovering over a cue line."""
+        index = self.cues_text.index(f"@{event.x},{event.y}")
+        tags = self.cues_text.tag_names(index)
+
+        for tag in tags:
+            if tag in CUE_TOOLTIPS:
+                text = CUE_TOOLTIPS[tag]
+                # Position tooltip near mouse
+                self._cues_tooltip.show(event.x_root + 10, event.y_root + 10, text)
+                return
+
+        # If no cue tag under cursor, hide any tooltip
+        self._cues_tooltip.hide()
 
 if __name__ == "__main__":
     app = FakeNewsApp()

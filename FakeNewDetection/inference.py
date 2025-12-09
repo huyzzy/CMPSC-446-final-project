@@ -3,6 +3,8 @@ import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from spaCyModel import load_spacy
 from nltk.sentiment import SentimentIntensityAnalyzer
+import nltk
+nltk.download("vader_lexicon")
 
 from persuasion import extract_persuasive_cues
 
